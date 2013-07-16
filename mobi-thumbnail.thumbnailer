@@ -1,0 +1,4 @@
+[Thumbnailer Entry]
+TryExec=/usr/bin/mobi-thumbnail.py
+Exec=/usr/bin/mobi-thumbnail.py %u %o
+MimeType=application/x-mobipocket-ebook;
