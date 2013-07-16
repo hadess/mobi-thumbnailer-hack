@@ -7,6 +7,8 @@ EOF_RECORD = chr(0xe9) + chr(0x8e) + "\r\n"
 import sys
 import array, struct, os, re, imghdr
 
+from gi.repository import Gio
+
 class unpackException(Exception):
 	pass
 
@@ -176,12 +178,16 @@ def main(argv=sys.argv):
 		print "  mobi-thumbnail.py infile outfile"
 		return 1
 	else:
-		if len(argv) >= 3:
-			infile, outfile = argv[1:]
+        inuri, outuri = argv[1:]
+
+        infile = Gio.File.new_for_commandline_arg (inuri)
+        inpath = infile.get_path ()
+
+        outfile = Gio.File.new_for_commandline_arg (outuri)
+        outpath = outfile.get_path ()
 
 		try:
-            # FIXME: This needs to be local paths instead of URIs
-			unpackBook(infile, outfile)
+			unpackBook(inpath, outpath)
 
 		except ValueError, e:
 			print "Error: %s" % e
