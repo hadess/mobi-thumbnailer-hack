@@ -1,0 +1,9 @@
+This is a trimmed down version of mobiunpack 0.32:
+http://www.mobileread.com/forums/showthread.php?t=61986
+made to thumbnail MOBI files in GNOME.
+
+The result is _not_ open-source. This is merely a test to
+see the minimal amount of work that can be done to get the
+cover of a MOBI file.
+
+Send files that don't thumbnail to hadess@hadess.net
