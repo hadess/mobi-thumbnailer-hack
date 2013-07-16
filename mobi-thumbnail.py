@@ -8,6 +8,7 @@ import sys
 import array, struct, os, re, imghdr
 
 from gi.repository import Gio
+from gi.repository import GdkPixbuf
 
 class unpackException(Exception):
 	pass
@@ -161,9 +162,10 @@ def unpackBook(infile, outfile):
 	if 'CoverOffset' in metadata:
 		imageNumber = int(metadata['CoverOffset'][0])
 		data = sect.loadSection(imageNumber + mu.firstimg)
-		f = open(outfile, 'wb')
-		f.write(data)
-		f.close
+
+        memstream = Gio.MemoryInputStream.new_from_data (data, None)
+		pixbuf = GdkPixbuf.Pixbuf.new_from_stream_at_scale (memstream, 256, -1, True, None)
+		pixbuf.savev (outfile, "png", [], [])
 
 def main(argv=sys.argv):
 	if len(argv) < 3:
