@@ -41,24 +41,6 @@ class mobiUnpack:
 	def getMetaData(self):
 		extheader=self.header[16 + self.length:]
 
-		id_map_values = { 
-			116 : 'StartOffset',
-			201 : 'CoverOffset',
-			202 : 'ThumbOffset',
-			203 : 'Fake Cover',
-			204 : 'Creator Software',
-			205 : 'Creator Major Version',
-			206 : 'Creator Minor Version',
-			207 : 'Creator Build Number',
-			401 : 'Clipping Limit',
-			402 : 'Publisher Limit',
-			404 : 'Text to Speech Disabled',
-		}
-		id_map_hexstrings = { 
-			209 : 'Tamper Proof Keys (hex)',
-			300 : 'Font Signature (hex)',
-		}
-	
 		metadata = {}
 	
 		def addValue(name, value):
@@ -73,8 +55,9 @@ class mobiUnpack:
 		for _ in range(num_items):
 			id, size = struct.unpack('>LL', extheader[pos:pos+8])
 			content = extheader[pos + 8: pos + size]
-			if id in id_map_values.keys():
-				name = id_map_values[id]
+			# 201 is CoverOffset
+			if id == 201:
+				name = "CoverOffset"
 				if size == 9:
 					value, = struct.unpack('B',content)
 					addValue(name, str(value)) 
@@ -86,9 +69,6 @@ class mobiUnpack:
 					addValue(name, str(value))
 				else:
 					print "Error: Value for %s has unexpected size of %s" % (name, size)
-			elif id in id_map_hexstrings.keys():
-				name = id_map_hexstrings[id]
-				addValue(name, content.encode('hex'))
 			else:
 				''' print "Warning: Unknown metadata with id %s found" % id '''
 				name = str(id) + ' (hex)'
