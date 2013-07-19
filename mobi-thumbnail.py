@@ -56,23 +56,9 @@ class mobiUnpack:
 			id, size = struct.unpack('>LL', extheader[pos:pos+8])
 			content = extheader[pos + 8: pos + size]
 			# 201 is CoverOffset
-			if id == 201:
-				name = "CoverOffset"
-				if size == 9:
-					value, = struct.unpack('B',content)
-					addValue(name, str(value)) 
-				elif size == 10:
-					value, = struct.unpack('>H',content)
-					addValue(name, str(value))
-				elif size == 12:
-					value, = struct.unpack('>L',content)
-					addValue(name, str(value))
-				else:
-					print "Error: Value for %s has unexpected size of %s" % (name, size)
-			else:
-				''' print "Warning: Unknown metadata with id %s found" % id '''
-				name = str(id) + ' (hex)'
-				addValue(name, content.encode('hex'))
+			if id == 201 and size == 12:
+				value, = struct.unpack('>L',content)
+				addValue("CoverOffset", str(value))
 			pos += size
 		return metadata
 
