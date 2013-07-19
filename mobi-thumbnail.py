@@ -40,33 +40,7 @@ class mobiUnpack:
 
 	def getMetaData(self):
 		extheader=self.header[16 + self.length:]
-		
-		id_map_strings = { 
-			  1 : 'Drm Server Id',
-			  2 : 'Drm Commerce Id',
-			  3 : 'Drm Ebookbase Book Id',
-			100 : 'Creator',
-			101 : 'Publisher',
-			102 : 'Imprint',
-			103 : 'Description',
-			104 : 'ISBN',
-			105 : 'Subject',
-			106 : 'Published',
-			107 : 'Review',
-			108 : 'Contributor',
-			109 : 'Rights',
-			110 : 'SubjectCode',
-			111 : 'Type',
-			112 : 'Source',
-			113 : 'ASIN',
-			117 : 'Adult',
-			118 : 'Price',
-			119 : 'Currency',
-			200 : 'DictShortName',
-			208 : 'Watermark',
-			501 : 'CDE Type',
-			503 : 'Updated Title',
-		}
+
 		id_map_values = { 
 			116 : 'StartOffset',
 			201 : 'CoverOffset',
@@ -99,10 +73,7 @@ class mobiUnpack:
 		for _ in range(num_items):
 			id, size = struct.unpack('>LL', extheader[pos:pos+8])
 			content = extheader[pos + 8: pos + size]
-			if id in id_map_strings.keys():
-				name = id_map_strings[id]
-				addValue(name, unicode(content, 'utf-8').encode("utf-8"))
-			elif id in id_map_values.keys():
+			if id in id_map_values.keys():
 				name = id_map_values[id]
 				if size == 9:
 					value, = struct.unpack('B',content)
@@ -119,7 +90,7 @@ class mobiUnpack:
 				name = id_map_hexstrings[id]
 				addValue(name, content.encode('hex'))
 			else:
-				print "Warning: Unknown metadata with id %s found" % id
+				''' print "Warning: Unknown metadata with id %s found" % id '''
 				name = str(id) + ' (hex)'
 				addValue(name, content.encode('hex'))
 			pos += size
