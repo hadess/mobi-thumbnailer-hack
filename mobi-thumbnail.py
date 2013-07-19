@@ -38,17 +38,9 @@ class mobiUnpack:
 		self.length, self.type, self.codepage, self.unique_id, self.version = struct.unpack('>LLLLL', self.header[20:40])
 		self.crypto_type, = struct.unpack_from('>H', self.header, 0xC)
 
-	def getMetaData(self):
+	def getImageNumber(self):
 		extheader=self.header[16 + self.length:]
 
-		metadata = {}
-	
-		def addValue(name, value):
-			if name not in metadata:
-				metadata[name] = [value]
-			else:
-				metadata[name].append(value)
-	
 		_length, num_items = struct.unpack('>LL', extheader[4:12])
 		extheader = extheader[12:]
 		pos = 0
@@ -58,9 +50,9 @@ class mobiUnpack:
 			# 201 is CoverOffset
 			if id == 201 and size == 12:
 				value, = struct.unpack('>L',content)
-				addValue("CoverOffset", str(value))
+				return value
 			pos += size
-		return metadata
+		return -1
 
 	@property
 	def isEncrypted(self):
@@ -91,12 +83,12 @@ def unpackBook(infile, outfile):
 	records = mu.records
 
 	# if exth region exists then parse it for the metadata
-	metadata = {}
-	if mu.hasExth:
-		metadata = mu.getMetaData()
+	if not mu.hasExth:
+	    raise unpackException('No metadata available')
 
-	if 'CoverOffset' in metadata:
-		imageNumber = int(metadata['CoverOffset'][0])
+    imageNumber = mu.getImageNumber()
+
+    if imageNumber >= 0:
 		data = sect.loadSection(imageNumber + mu.firstimg)
 
         memstream = Gio.MemoryInputStream.new_from_data (data, None)
