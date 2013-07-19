@@ -165,7 +165,10 @@ def unpackBook(infile, outfile):
 
         memstream = Gio.MemoryInputStream.new_from_data (data, None)
 		pixbuf = GdkPixbuf.Pixbuf.new_from_stream_at_scale (memstream, 256, -1, True, None)
-		pixbuf.savev (outfile, "png", [], [])
+		return pixbuf.savev (outfile, "png", [], [])
+    else:
+        print "Could not find cover in %s" % infile
+        return False
 
 def main(argv=sys.argv):
 	if len(argv) < 3:
@@ -188,13 +191,10 @@ def main(argv=sys.argv):
         outfile = Gio.File.new_for_commandline_arg (outuri)
         outpath = outfile.get_path ()
 
-		try:
-			unpackBook(inpath, outpath)
-
-		except ValueError, e:
-			print "Error: %s" % e
-			return 1
-		return 0
+        if unpackBook(inpath, outpath):
+            return 0
+        else:
+            return 1
 
 if __name__ == "__main__":
 	sys.exit(main())
