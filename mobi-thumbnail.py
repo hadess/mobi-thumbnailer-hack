@@ -94,7 +94,6 @@ def unpackBook(infile, outfile):
 	metadata = {}
 	if mu.hasExth:
 		metadata = mu.getMetaData()
-	metadata['UniqueID'] = [str(mu.unique_id)]
 
 	if 'CoverOffset' in metadata:
 		imageNumber = int(metadata['CoverOffset'][0])
