@@ -84,26 +84,26 @@ def unpackBook(infile, outfile):
 
 	# if exth region exists then parse it for the metadata
 	if not mu.hasExth:
-	    raise unpackException('No metadata available')
+		raise unpackException('No metadata available')
 
-    imageNumber = mu.getImageNumber()
+	imageNumber = mu.getImageNumber()
 
-    if imageNumber >= 0:
+	if imageNumber >= 0:
 		data = sect.loadSection(imageNumber + mu.firstimg)
 
-        memstream = Gio.MemoryInputStream.new_from_data (data, None)
+		memstream = Gio.MemoryInputStream.new_from_data (data, None)
 		pixbuf = GdkPixbuf.Pixbuf.new_from_stream_at_scale (memstream, 256, -1, True, None)
 		return pixbuf.savev (outfile, "png", [], [])
-    else:
-        print "Could not find cover in %s" % infile
-        return False
+	else:
+		print "Could not find cover in %s" % infile
+		return False
 
 def main(argv=sys.argv):
 	if len(argv) < 3:
-	    print "thumbnailer based on MobiUnpack 0.32"
-	    print "  Copyright (c) 2009 Charles M. Hannum <root@ihack.net>"
-	    print "  Copyright (c) 2013 Bastien Nocera <hadess@hadess.net>"
-	    print "  With Additions by P. Durrant, K. Hendricks, S. Siebert, fandrieu and DiapDealer."
+		print "thumbnailer based on MobiUnpack 0.32"
+		print "  Copyright (c) 2009 Charles M. Hannum <root@ihack.net>"
+		print "  Copyright (c) 2013 Bastien Nocera <hadess@hadess.net>"
+		print "  With Additions by P. Durrant, K. Hendricks, S. Siebert, fandrieu and DiapDealer."
 		print ""
 		print "Description:"
 		print "  Outputs the cover image of a mobi file."
@@ -111,18 +111,18 @@ def main(argv=sys.argv):
 		print "  mobi-thumbnail.py infile outfile"
 		return 1
 	else:
-        inuri, outuri = argv[1:]
+		inuri, outuri = argv[1:]
 
-        infile = Gio.File.new_for_commandline_arg (inuri)
-        inpath = infile.get_path ()
+		infile = Gio.File.new_for_commandline_arg (inuri)
+		inpath = infile.get_path ()
 
-        outfile = Gio.File.new_for_commandline_arg (outuri)
-        outpath = outfile.get_path ()
+		outfile = Gio.File.new_for_commandline_arg (outuri)
+		outpath = outfile.get_path ()
 
-        if unpackBook(inpath, outpath):
-            return 0
-        else:
-            return 1
+		if unpackBook(inpath, outpath):
+			return 0
+		else:
+			return 1
 
 if __name__ == "__main__":
 	sys.exit(main())
