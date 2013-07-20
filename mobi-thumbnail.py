@@ -78,18 +78,14 @@ def unpackBook(infile, outfile):
 	mu = mobiUnpack(infile)
 	if mu.isEncrypted:
 		raise unpackException('file is encrypted')
-	header = mu.header
-	sect = mu.sect
-	records = mu.records
-
 	# if exth region exists then parse it for the metadata
-	if not mu.hasExth:
+	elif not mu.hasExth:
 		raise unpackException('No metadata available')
 
 	imageNumber = mu.getImageNumber()
 
 	if imageNumber >= 0:
-		data = sect.loadSection(imageNumber + mu.firstimg)
+		data = mu.sect.loadSection(imageNumber + mu.firstimg)
 
 		memstream = Gio.MemoryInputStream.new_from_data (data, None)
 		pixbuf = GdkPixbuf.Pixbuf.new_from_stream_at_scale (memstream, 256, -1, True, None)
