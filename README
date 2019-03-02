@@ -6,4 +6,7 @@ The result is _not_ open-source. This is merely a test to
 see the minimal amount of work that can be done to get the
 cover of a MOBI file.
 
+Obsoleted by:
+https://gitlab.gnome.org/GNOME/gnome-epub-thumbnailer
+
 Send files that don't thumbnail to hadess@hadess.net
